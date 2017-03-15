@@ -4,11 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "npm run lint && mocha",
+    "lint": "jshint src test"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "jshint": "^2.9.4",
     "mocha": "^3.2.0"
   }
 }

@@ -1,6 +1,6 @@
 var { postOrder, preOrder, inOrder, levelOrder } = require("../src/");
 var assert = require("assert");
-
+/*global it:true, describe:undefined*/
 describe("traverse", function() {
     var p = {
         F: {
@@ -29,14 +29,14 @@ describe("traverse", function() {
     var Visitor = function() {
         var order = [];
         return {
-            visit: function(key, value, parent) {
+            visit: function(key /*, value , parent*/) {
                 order.push(key);
             },
             getOrder: function() {
                 return order;
             }
-        }
-    }
+        };
+    };
 
     it("postOrder", function() {
         var visitor = new Visitor();

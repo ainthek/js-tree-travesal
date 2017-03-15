@@ -1,0 +1,9 @@
+{
+    "esversion": 6,
+    "node": true,
+    "undef": true,
+    "laxbreak": true,
+    "expr": true,
+    "eqnull": true,
+    "unused": true
+}
