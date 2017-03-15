@@ -29,7 +29,7 @@ describe("traverse", function() {
     var Visitor = function() {
         var order = [];
         return {
-            visit: function(key /*, value , parent*/) {
+            visit: function(key /*, value , parent*/ ) {
                 order.push(key);
             },
             getOrder: function() {
@@ -60,6 +60,25 @@ describe("traverse", function() {
         var visitor = new Visitor();
         levelOrder(p, visitor.visit);
         assert.deepEqual(visitor.getOrder(), expected.levelOrder);
+    });
+
+    it("[FIXME] levelOrder shell support null values", function() {
+        var keys = [],
+            values = [];
+        levelOrder({ A: { B: 10, C: null } }, function(key, value, parent) {
+            keys.push(key);
+            values.push(value);
+            // todo: parent
+        });
+        assert.deepEqual(keys, [null, "A", "B", "C"]);
+        //console.log(JSON.stringify(values));
+        assert.deepEqual(values, [
+            { "A": { "B": 10, "C": null } },
+            { "B": 10, "C": null },
+            10,
+            null
+        ]);
+
     });
 
     it("json-stringify", function() {
