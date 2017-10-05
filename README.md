@@ -42,7 +42,13 @@ JSON.stringify(value[, replacer[, space]]). Replacer will receive nodes it the f
 
 see test/test/spec.js
 
+How this can be usefull ?
 
+see test/revivers.spec.js
+
+## References
+
+<https://www.npmjs.com/package/traverse>
 
 
 
