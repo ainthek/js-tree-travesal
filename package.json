@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "mocha": "mocha test --recursive",
-    "test": "npm run lint && npm run mocha",
+    "test": "mocha test --recursive",
     "lint": "jshint src test"
   },
   "author": "",

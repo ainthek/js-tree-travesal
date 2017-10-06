@@ -8,7 +8,7 @@ describe("[POC] Implement inheritance, using various methods", function() {
             discounts: [10, 20, 30],
             limit: 10,
             subjects: {
-                
+
                 HOUSE: {
                     discounts: [15],
                     price: null,
@@ -49,6 +49,14 @@ describe("[POC] Implement inheritance, using various methods", function() {
         o2.insurance.subjects.GARAGE.discounts = [];
         assert.deepEqual(o2.insurance.discounts, [1, 2, 4]);
     });
+    
+    // var large = JSON.stringify(require("./sample-data.json"));
+    // it("large - parse()", function() {
+    //     JSON.parse(large)
+    // });
+    // it("large - parse(revivers.setParentPrototype)", function() {
+    //     JSON.parse(large,revivers.setParentPrototype);
+    // });
 
 
 
