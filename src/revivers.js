@@ -1,8 +1,7 @@
-
 module.exports = {
     valueof,
     parent,
-    mixin
+    setParentPrototype
 }
 
 function self(v) {
@@ -33,23 +32,16 @@ function parent(k, v) {
     }
 }
 
-function mixin(k, v) {
-    // var a = {a: 1}; 
-    // // a ---> Object.prototype ---> null
+const isO = (it) => Object.prototype.toString.apply(it) == "[object Object]";
 
-    // var b = Object.create(a);
-    // // b ---> a ---> Object.prototype ---> null
-    // console.log(b.a); // 1 (inherited)
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain
-    if (typeof v !== 'object') {
-        return v;
-    } else {
-        Object.keys(v).forEach((p) => {
-            if (typeof v[p] == 'object') {
-                v[p] =_d(v, v[p]);
+function setParentPrototype(k, v) {
+    // BEWARE: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf
+    if (isO(v)) {
+        for (var p in v) {
+            if (isO(v[p])) {
+                Object.setPrototypeOf(v[p], v);
             }
-        });
-        return v;
+        }
     }
+    return v;
 }
-

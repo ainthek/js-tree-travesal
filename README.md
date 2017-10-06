@@ -48,6 +48,7 @@ see test/revivers.spec.js
 
 ## References
 
+<https://www.npmjs.com/package/json-decycle>
 <https://www.npmjs.com/package/traverse>
 
 

@@ -44,52 +44,7 @@ describe("JSON.parse revivers", function() {
         assert(treeObject2.y.y1 !== "y1");
         assert(treeObject2.y.y1 == "y1");
     });
-    it.skip("chain", function() {
+    
 
-
-        var p = {
-            F: {
-                B: {
-                    A: "A",
-                    D: {
-                        C: "C",
-                        E: "E"
-                    }
-                },
-                G: {
-                    I: {
-                        H: "H"
-                    }
-                }
-            }
-        };
-        //postOrder: ['A', 'C', 'E', 'D', 'B', 'H', 'I', 'G', 'F', null],
-        // function TMP() {}
-        // return function(obj, props) {
-        //     TMP.prototype = obj;
-        //     var tmp = new TMP();
-        //     TMP.prototype = null;
-        //     if (props) {
-        //         Object.assign(tmp, props);
-        //     }
-        //     console.log("returning", tmp);
-        //     return tmp; // Object
-        // };
-        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf
-        var props = p.F.B.D;
-        var C = function(x) {};
-        C.prototype = p.F.B;
-        p.F.B.D = new C();
-        C.prototype = null
-        Object.assign(p.F.B.D, props);
-        assert(p.F.B.D.C==='C')
-        assert(p.F.B.D.A==='A')
-
-        console.log(JSON.stringify(p.F.B.D.constructor.prototype));
-
-
-
-
-    });
 
 });

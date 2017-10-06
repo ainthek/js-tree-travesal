@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-  	"mocha":"mocha test --recursive",
+    "mocha": "mocha test --recursive",
     "test": "npm run lint && npm run mocha",
     "lint": "jshint src test"
   },
@@ -13,5 +13,8 @@
   "devDependencies": {
     "jshint": "^2.9.4",
     "mocha": "^3.2.0"
+  },
+  "dependencies": {
+    "json-decycle": "^1.0.0"
   }
 }
