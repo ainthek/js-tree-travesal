@@ -48,15 +48,69 @@ describe("[POC] Implement inheritance, using various methods", function() {
         // but not back !
         o2.insurance.subjects.GARAGE.discounts = [];
         assert.deepEqual(o2.insurance.discounts, [1, 2, 4]);
+
+        o2.insurance.limit = 12;
+        assert.deepEqual(o2.insurance.subjects.HOUSE.limit, 12);
     });
-    
-    // var large = JSON.stringify(require("./sample-data.json"));
-    // it("large - parse()", function() {
-    //     JSON.parse(large)
-    // });
-    // it("large - parse(revivers.setParentPrototype)", function() {
-    //     JSON.parse(large,revivers.setParentPrototype);
-    // });
+
+    it("revivers.setParentPrototype2", function() {
+        // BEWARE: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf
+        var o2 = JSON.parse(str, revivers.setParentPrototype2);
+
+        assert(o2.insurance.subjects.HOUSE.BALCONY.discounts);
+        assert(o2.insurance.subjects.HOUSE.BALCONY.material === "glass");
+        assert(o2.insurance.subjects.HOUSE.GARAGE); //not realy needed
+        assert(o2.insurance.subjects.GARAGE.HOUSE);
+        assert(o2.insurance.subjects.HOUSE.limit);
+        assert(o2.insurance.subjects.GARAGE.limit === 4);
+        assert(o2.insurance.subjects.HOUSE.limit === 10);
+        assert.deepEqual(o2.insurance.subjects.GARAGE.discounts, [10, 20, 30]);
+        // live reference
+        o2.insurance.discounts = [1, 2, 4];
+        assert.deepEqual(o2.insurance.subjects.GARAGE.discounts, [1, 2, 4]);
+
+        // but not back !
+        o2.insurance.subjects.GARAGE.discounts = [];
+        assert.deepEqual(o2.insurance.discounts, [1, 2, 4]);
+
+        o2.insurance.limit = 12;
+        assert.deepEqual(o2.insurance.subjects.HOUSE.limit, 12);
+    });
+    it("revivers.objectAssignRecursive", function() {
+        // BEWARE: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf
+        var o2 = JSON.parse(str, revivers.objectAssignRecursive);
+
+        assert(o2.insurance.subjects.HOUSE.BALCONY.discounts);
+        assert(o2.insurance.subjects.HOUSE.BALCONY.material === "glass");
+        assert(o2.insurance.subjects.HOUSE.GARAGE); //not realy needed
+        assert(o2.insurance.subjects.GARAGE.HOUSE);
+        assert(o2.insurance.subjects.HOUSE.limit);
+        assert(o2.insurance.subjects.GARAGE.limit === 4);
+        assert(o2.insurance.subjects.HOUSE.limit === 10);
+        assert.deepEqual(o2.insurance.subjects.GARAGE.discounts, [10, 20, 30]);
+        // live reference
+        o2.insurance.discounts = [1, 2, 4];
+        assert.deepEqual(o2.insurance.subjects.GARAGE.discounts, [1, 2, 4]);
+
+        // but not back !
+        o2.insurance.subjects.GARAGE.discounts = [];
+        assert.deepEqual(o2.insurance.discounts, [1, 2, 4]);
+
+        o2.insurance.limit = 12;
+        assert.deepEqual(o2.insurance.subjects.HOUSE.limit, 12);
+    });
+
+
+    var large = JSON.stringify(require("./sample-data.json"));
+    it("large - parse()", function() {
+        JSON.parse(large)
+    });
+    it("large - parse(revivers.setParentPrototype)", function() {
+        JSON.parse(large, revivers.setParentPrototype);
+    });
+    it("large - parse(revivers.objectAssignRecursive)", function() {
+        JSON.parse(large, revivers.objectAssignRecursive);
+    });
 
 
 

@@ -1,7 +1,9 @@
 module.exports = {
     valueof,
     parent,
-    setParentPrototype
+    setParentPrototype,
+    setParentPrototype2,
+    objectAssignRecursive
 }
 
 function self(v) {
@@ -44,4 +46,33 @@ function setParentPrototype(k, v) {
         }
     }
     return v;
+}
+
+function setParentPrototype2(k, v) {
+    if (isO(v)) Object.setPrototypeOf(v, this);
+    return v;
+}
+
+function objectAssignOnlyParent(k, v) {
+    return isO(v) ? Object.assign(Object.create(this), v) : v; // works only with direct parent
+}
+
+function objectAssignRecursive(k, v) {
+    if (isO(v)) {
+        const ret = Object.assign(Object.create(this), v);
+        fixProto(ret);
+        return ret;
+    }
+    return v;
+
+    /**** helpers ****/
+    function fixProto(ret) {
+        Object.keys(ret).forEach(function(key) {
+            if (isO(ret[key])) {
+                ret[key] = Object.assign(Object.create(ret), ret[key]);
+                fixProto(ret[key]);
+            }
+        });
+    }
+
 }
