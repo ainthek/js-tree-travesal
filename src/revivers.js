@@ -5,7 +5,10 @@ module.exports = {
     setParentPrototype2,
     objectAssignRecursive,
     objectAssignRecursiveWhitelist,
-    objectAssignRecursiveWhitelistProxy
+    objectAssignRecursiveWhitelistProxy,
+    objectAssignRecursiveTraverse,
+    objectAssignRecursiveTraverseWhitelist,
+    objectAssignRecursiveTraverseWhitelistProxy
 }
 
 function self(v) {
@@ -86,6 +89,54 @@ function objectAssignRecursiveWhitelistProxy(k, v) {
         return ret;
     }
     return v;
+}
+
+function objectAssignRecursiveTraverse(obj) {
+  Object.keys(obj).forEach(function(key) {
+    if (isO(obj[key])) {
+      obj[key] = Object.assign(Object.create(obj), obj[key]);
+      objectAssignRecursiveTraverse(obj[key]);
+    }
+  });
+}
+
+function objectAssignRecursiveTraverseWhitelist(obj) {
+  Object.keys(obj).forEach(function(key) {
+    if (isO(obj[key])) {
+      const proto = {};
+      whitelist.forEach((property) => {
+        if (!Object.keys(obj[key]).includes(property)) {
+          let getVal = undefined;
+          Object.defineProperty(proto, property, {
+            get() {
+              return getVal === undefined ? obj[property] : getVal;
+            },
+            set(val) {
+              getVal = val;
+            }
+          });
+        }
+      });
+      obj[key] = Object.assign(Object.create(proto), obj[key]);
+      objectAssignRecursiveTraverseWhitelist(obj[key]);
+    }
+  });
+}
+
+function objectAssignRecursiveTraverseWhitelistProxy(obj) {
+  Object.keys(obj).forEach(function(key) {
+    if (isO(obj[key])) {
+      const proto = new Proxy(Object.create(obj), {
+        get(target, property) {
+          if (Object.keys(target).includes(property) || whitelist.includes(property)) {
+            return target[property];
+          }
+        }
+      });
+      obj[key] = Object.assign(Object.create(proto), obj[key]);
+      objectAssignRecursiveTraverseWhitelistProxy(obj[key]);
+    }
+  });
 }
 
 /**** helpers ****/

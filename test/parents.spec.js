@@ -8,7 +8,6 @@ describe("[POC] Implement inheritance, using various methods", function() {
             discounts: [10, 20, 30],
             limit: 10,
             subjects: {
-
                 HOUSE: {
                     discounts: [15],
                     price: null,
@@ -141,6 +140,69 @@ describe("[POC] Implement inheritance, using various methods", function() {
         o2.insurance.limit = 12;
         assert.deepEqual(o2.insurance.subjects.HOUSE.limit, 12);
     });
+    it("revivers.objectAssignRecursiveTraverse", function() {
+        var o2 = JSON.parse(str);
+        revivers.objectAssignRecursiveTraverse(o2);
+
+        assert(o2.insurance.subjects.HOUSE.BALCONY.discounts);
+        assert(o2.insurance.subjects.HOUSE.BALCONY.material === "glass");
+        assert(o2.insurance.subjects.HOUSE.limit);
+        assert(o2.insurance.subjects.GARAGE.limit === 4);
+        assert(o2.insurance.subjects.HOUSE.limit === 10);
+        assert.deepEqual(o2.insurance.subjects.GARAGE.discounts, [10, 20, 30]);
+        // live reference
+        o2.insurance.discounts = [1, 2, 4];
+        assert.deepEqual(o2.insurance.subjects.GARAGE.discounts, [1, 2, 4]);
+
+        // but not back !
+        o2.insurance.subjects.GARAGE.discounts = [];
+        assert.deepEqual(o2.insurance.discounts, [1, 2, 4]);
+
+        o2.insurance.limit = 12;
+        assert.deepEqual(o2.insurance.subjects.HOUSE.limit, 12);
+    });
+    it("revivers.objectAssignRecursiveTraverseWhitelist", function() {
+        var o2 = JSON.parse(str);
+        revivers.objectAssignRecursiveTraverseWhitelist(o2);
+
+        assert(o2.insurance.subjects.HOUSE.BALCONY.discounts);
+        assert(o2.insurance.subjects.HOUSE.BALCONY.material === "glass");
+        assert(o2.insurance.subjects.HOUSE.limit);
+        assert(o2.insurance.subjects.GARAGE.limit === 4);
+        assert(o2.insurance.subjects.HOUSE.limit === 10);
+        assert.deepEqual(o2.insurance.subjects.GARAGE.discounts, [10, 20, 30]);
+        // live reference
+        o2.insurance.discounts = [1, 2, 4];
+        assert.deepEqual(o2.insurance.subjects.GARAGE.discounts, [1, 2, 4]);
+
+        // but not back !
+        o2.insurance.subjects.GARAGE.discounts = [];
+        assert.deepEqual(o2.insurance.discounts, [1, 2, 4]);
+
+        o2.insurance.limit = 12;
+        assert.deepEqual(o2.insurance.subjects.HOUSE.limit, 12);
+    });
+    it("revivers.objectAssignRecursiveTraverseWhitelistProxy", function() {
+        var o2 = JSON.parse(str);
+        revivers.objectAssignRecursiveTraverseWhitelist(o2);
+
+        assert(o2.insurance.subjects.HOUSE.BALCONY.discounts);
+        assert(o2.insurance.subjects.HOUSE.BALCONY.material === "glass");
+        assert(o2.insurance.subjects.HOUSE.limit);
+        assert(o2.insurance.subjects.GARAGE.limit === 4);
+        assert(o2.insurance.subjects.HOUSE.limit === 10);
+        assert.deepEqual(o2.insurance.subjects.GARAGE.discounts, [10, 20, 30]);
+        // live reference
+        o2.insurance.discounts = [1, 2, 4];
+        assert.deepEqual(o2.insurance.subjects.GARAGE.discounts, [1, 2, 4]);
+
+        // but not back !
+        o2.insurance.subjects.GARAGE.discounts = [];
+        assert.deepEqual(o2.insurance.discounts, [1, 2, 4]);
+
+        o2.insurance.limit = 12;
+        assert.deepEqual(o2.insurance.subjects.HOUSE.limit, 12);
+    });
 
 
     var large = JSON.stringify(require("./sample-data.json"));
@@ -158,6 +220,15 @@ describe("[POC] Implement inheritance, using various methods", function() {
     });
     it("large - parse(revivers.objectAssignRecursiveWhitelistProxy)", function() {
         JSON.parse(large, revivers.objectAssignRecursiveWhitelistProxy);
+    });
+    it("large - parse(revivers.objectAssignRecursiveTraverse)", function() {
+        JSON.parse(large, revivers.objectAssignRecursiveTraverse);
+    });
+    it("large - parse(revivers.objectAssignRecursiveTraverseWhitelist)", function() {
+        JSON.parse(large, revivers.objectAssignRecursiveTraverseWhitelist);
+    });
+    it("large - parse(revivers.objectAssignRecursiveTraverseWhitelistProxy)", function() {
+        JSON.parse(large, revivers.objectAssignRecursiveTraverseWhitelistProxy);
     });
 
 
