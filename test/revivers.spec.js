@@ -44,7 +44,105 @@ describe("JSON.parse revivers", function() {
         assert(treeObject2.y.y1 !== "y1");
         assert(treeObject2.y.y1 == "y1");
     });
-    
+
+    it("links POC", function() {
+        var str = JSON.stringify({
+            a: 1,
+            b: 2,
+            c: {
+                _link: "somewhere else"
+            }
+        });
+        var o = JSON.parse(str, resolveLinks(fooResolver));
+        return o.then((o) => assert.deepEqual(o, {
+            "a": 1,
+            "b": 2,
+            "c": {
+                "_data": [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            }
+        }));
+
+        function resolveLinks(linkResolver) {
+            var links = [];
+            return function(k, v) {
+                if (k === '') {
+                    return Promise.all(links).then((link) => v);
+                } else {
+                    if (v._link) {
+                        var promise = linkResolver(v).then((data) => {
+                            delete v._link
+                            v._data = data;
+                        });
+                        links.push(promise);
+                        return v;
+                    } else {
+                        return v;
+                    }
+                }
+            }
+        }
+
+        function fooResolver(o) {
+            return new Promise((resolve, reject) => {
+                resolve([1, 2, 3, 4]);
+            })
+        }
+
+    });
+
+    it("links POC (TODO)", function() {
+        var str = JSON.stringify({
+            a: 1,
+            b: 2,
+            c: {
+                _link: "somewhere else"
+            }
+        });
+        var o = JSON.parse(str, resolveLinks(fooResolver));
+        return o.then((o) => assert.deepEqual(o, {
+            "a": 1,
+            "b": 2,
+            "c": [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+        }));
+
+        function resolveLinks(linkResolver) {
+            var links = [];
+            return function(k, v) {
+                if (k === '') {
+                    return Promise.all(links).then((link) => v);
+                } else {
+                    if (v._link) {
+                        var promise = linkResolver(v).then((data) => {
+                            delete v._link
+                            v._data = data;
+                        });
+                        links.push(promise);
+                        return v;
+                    } else {
+                        return v;
+                    }
+                }
+            }
+        }
+
+        function fooResolver(o) {
+            return new Promise((resolve, reject) => {
+                resolve([1, 2, 3, 4]);
+            })
+        }
+
+    })
+
 
 
 });
