@@ -1,8 +1,8 @@
 // just inspiration, simplified not fully correct
 module.exports = (function() {
-    // boodman/crockford delegation w/ cornford optimization
+  // boodman/crockford delegation w/ cornford optimization
 
-    /*=====
+  /*=====
 		delegate: function(obj, props){
 			// summary:
 			//		Returns a new object which "looks" to obj for properties which it
@@ -33,15 +33,15 @@ module.exports = (function() {
 		},
 		=====*/
 
-    function TMP() {}
-    return function(obj, props) {
-        TMP.prototype = obj;
-        var tmp = new TMP();
-        TMP.prototype = null;
-        if (props) {
-            Object.assign(tmp, props);
-        }
-        console.log("returning", tmp);
-        return tmp; // Object
-    };
+  function TMP() {}
+  return function(obj, props) {
+    TMP.prototype = obj;
+    var tmp = new TMP();
+    TMP.prototype = null;
+    if (props) {
+      Object.assign(tmp, props);
+    }
+    console.log("returning", tmp);
+    return tmp; // Object
+  };
 })();
