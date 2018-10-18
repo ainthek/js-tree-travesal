@@ -4,5 +4,4 @@ module.exports = {
     if (v === undefined) throw new Error("Undefined !");
     return v;
   }
-
-}
+};

@@ -9,19 +9,19 @@ module.exports = {
   objectAssignRecursiveTraverse,
   objectAssignRecursiveTraverseWhitelist,
   objectAssignRecursiveTraverseWhitelistProxy
-}
+};
 
 function self(v) {
   return function() {
     return v;
-  }
+  };
 }
 
 function valueof(k, v) {
   if (typeof v !== 'object') {
     return {
       valueOf: self(v)
-    }
+    };
   }
   return v;
 }
@@ -31,7 +31,7 @@ function parent(k, v) {
   if (typeof v !== 'object') {
     return {
       valueOf: self(v)
-    }
+    };
   } else {
 
     Object.keys(v).forEach((p) => v[p]._parent = v);
@@ -58,9 +58,11 @@ function setParentPrototype2(k, v) {
   return v;
 }
 
+/* TODO: where this was used ?
 function objectAssignOnlyParent(k, v) {
   return isO(v) ? Object.assign(Object.create(this), v) : v; // works only with direct parent
 }
+*/
 
 function objectAssignRecursive(k, v) {
   if (isO(v)) {
@@ -106,7 +108,7 @@ function objectAssignRecursiveTraverseWhitelist(obj) {
       const proto = {};
       whitelist.forEach((property) => {
         if (!Object.keys(obj[key]).includes(property)) {
-          let getVal = undefined;
+          let getVal;
           Object.defineProperty(proto, property, {
             get() {
               return getVal === undefined ? obj[property] : getVal;
@@ -164,7 +166,7 @@ function createObj(object, values, whitelist, useProxy) {
     obj = {};
     whitelist.forEach((property) => {
       if (!Object.keys(values).includes(property)) {
-        let getVal = undefined;
+        let getVal;
         Object.defineProperty(obj, property, {
           get() {
             return getVal === undefined ? object[property] : getVal;

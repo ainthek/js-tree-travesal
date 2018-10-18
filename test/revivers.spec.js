@@ -1,4 +1,4 @@
-/*global describe:true,it:true,    after:true,before:true,afterEach:true,beforeEach:true */
+/*global describe:true,it:true */
 var assert = require("assert");
 
 var revivers = require("../src/revivers.js");
@@ -71,11 +71,11 @@ describe("JSON.parse revivers", function() {
       var links = [];
       return function(k, v) {
         if (k === '') {
-          return Promise.all(links).then((link) => v);
+          return Promise.all(links).then(() => v);
         } else {
           if (v._link) {
             var promise = linkResolver(v).then((data) => {
-              delete v._link
+              delete v._link;
               v._data = data;
             });
             links.push(promise);
@@ -84,13 +84,11 @@ describe("JSON.parse revivers", function() {
             return v;
           }
         }
-      }
+      };
     }
 
-    function fooResolver(o) {
-      return new Promise((resolve, reject) => {
-        resolve([1, 2, 3, 4]);
-      })
+    function fooResolver() {
+      return Promise.resolve([1, 2, 3, 4]);
     }
 
   });

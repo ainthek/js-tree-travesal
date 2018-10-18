@@ -65,7 +65,7 @@ describe("traverse", function() {
   it.skip("[FIXME] levelOrder shell support null values", function() {
     var keys = [],
       values = [];
-    levelOrder({ A: { B: 10, C: null } }, function(key, value, parent) {
+    levelOrder({ A: { B: 10, C: null } }, function(key, value/*, parent*/) {
       keys.push(key);
       values.push(value);
       // todo: parent

@@ -1,4 +1,4 @@
-/*global describe:true,it:true,    after:true,before:true,afterEach:true,beforeEach:true */
+/*global describe:true,it:true */
 var assert = require("assert");
 var revivers = require("../src/revivers.js");
 
@@ -206,7 +206,8 @@ describe("[POC] Implement inheritance, using various methods", function() {
 
   describe.skip("large-parse", function() {
     // FIXME: missing sample file
-    //var large = JSON.stringify(require("./sample-data.json"));
+    /*
+    var large = JSON.stringify(require("./sample-data.json"));
     it("large - parse()", function() {
       JSON.parse(large)
     });
@@ -231,6 +232,7 @@ describe("[POC] Implement inheritance, using various methods", function() {
     it("large - parse(revivers.objectAssignRecursiveTraverseWhitelistProxy)", function() {
       JSON.parse(large, revivers.objectAssignRecursiveTraverseWhitelistProxy);
     });
+    */
   });
   it("POC - this is the main idea, how it originated", function() {
 
@@ -238,10 +240,10 @@ describe("[POC] Implement inheritance, using various methods", function() {
 
     var o2 = JSON.parse(str);
 
-    Object.setPrototypeOf(o2.insurance.subjects.HOUSE.BALCONY, o2.insurance.subjects.HOUSE)
-    Object.setPrototypeOf(o2.insurance.subjects.HOUSE, o2.insurance.subjects)
-    Object.setPrototypeOf(o2.insurance.subjects.GARAGE, o2.insurance.subjects)
-    Object.setPrototypeOf(o2.insurance.subjects, o2.insurance)
+    Object.setPrototypeOf(o2.insurance.subjects.HOUSE.BALCONY, o2.insurance.subjects.HOUSE);
+    Object.setPrototypeOf(o2.insurance.subjects.HOUSE, o2.insurance.subjects);
+    Object.setPrototypeOf(o2.insurance.subjects.GARAGE, o2.insurance.subjects);
+    Object.setPrototypeOf(o2.insurance.subjects, o2.insurance);
 
     assert(o2.insurance.subjects.HOUSE.BALCONY.discounts);
     assert(o2.insurance.subjects.HOUSE.BALCONY.material === "glass");
@@ -251,7 +253,7 @@ describe("[POC] Implement inheritance, using various methods", function() {
     assert(o2.insurance.subjects.GARAGE.limit === 4);
     assert(o2.insurance.subjects.HOUSE.limit === 10);
 
-  })
+  });
 
 
 
