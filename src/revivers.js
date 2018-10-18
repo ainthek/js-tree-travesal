@@ -3,7 +3,12 @@ module.exports = {
     parent,
     setParentPrototype,
     setParentPrototype2,
-    objectAssignRecursive
+    objectAssignRecursive,
+    objectAssignRecursiveWhitelist,
+    objectAssignRecursiveWhitelistProxy,
+    objectAssignRecursiveTraverse,
+    objectAssignRecursiveTraverseWhitelist,
+    objectAssignRecursiveTraverseWhitelistProxy
 }
 
 function self(v) {
@@ -59,19 +64,118 @@ function objectAssignOnlyParent(k, v) {
 
 function objectAssignRecursive(k, v) {
     if (isO(v)) {
-        const ret = Object.assign(Object.create(this), v);
+        const ret = createObj(this, v);
         fixProto(ret);
         return ret;
     }
     return v;
-
-    /**** helpers ****/
-    function fixProto(ret) {
-        Object.keys(ret).forEach(function(key) {
-            if (isO(ret[key])) {
-                ret[key] = Object.assign(Object.create(ret), ret[key]);
-                fixProto(ret[key]);
-            }
-        });
-    }
 }
+
+const whitelist = ["limit", "discounts"];
+
+function objectAssignRecursiveWhitelist(k, v) {
+    if (isO(v)) {
+        const ret = createObj(this, v, whitelist);
+        fixProto(ret, whitelist);
+        return ret;
+    }
+    return v;
+}
+
+function objectAssignRecursiveWhitelistProxy(k, v) {
+    if (isO(v)) {
+        const ret = createObj(this, v, whitelist, true);
+        fixProto(ret, whitelist, true);
+        return ret;
+    }
+    return v;
+}
+
+function objectAssignRecursiveTraverse(obj) {
+  Object.keys(obj).forEach(function(key) {
+    if (isO(obj[key])) {
+      obj[key] = Object.assign(Object.create(obj), obj[key]);
+      objectAssignRecursiveTraverse(obj[key]);
+    }
+  });
+}
+
+function objectAssignRecursiveTraverseWhitelist(obj) {
+  Object.keys(obj).forEach(function(key) {
+    if (isO(obj[key])) {
+      const proto = {};
+      whitelist.forEach((property) => {
+        if (!Object.keys(obj[key]).includes(property)) {
+          let getVal = undefined;
+          Object.defineProperty(proto, property, {
+            get() {
+              return getVal === undefined ? obj[property] : getVal;
+            },
+            set(val) {
+              getVal = val;
+            }
+          });
+        }
+      });
+      obj[key] = Object.assign(Object.create(proto), obj[key]);
+      objectAssignRecursiveTraverseWhitelist(obj[key]);
+    }
+  });
+}
+
+function objectAssignRecursiveTraverseWhitelistProxy(obj) {
+  Object.keys(obj).forEach(function(key) {
+    if (isO(obj[key])) {
+      const proto = new Proxy(Object.create(obj), {
+        get(target, property) {
+          if (Object.keys(target).includes(property) || whitelist.includes(property)) {
+            return target[property];
+          }
+        }
+      });
+      obj[key] = Object.assign(Object.create(proto), obj[key]);
+      objectAssignRecursiveTraverseWhitelistProxy(obj[key]);
+    }
+  });
+}
+
+/**** helpers ****/
+function fixProto(object, whitelist, useProxy) {
+  Object.keys(object).forEach((key) => {
+    if (isO(object[key])) {
+      object[key] = createObj(object, object[key], whitelist, useProxy);
+      fixProto(object[key], whitelist, useProxy);
+    }
+  });
+}
+
+function createObj(object, values, whitelist, useProxy) {
+  if (!whitelist) return Object.assign(Object.create(object), values);
+  let obj;
+  if (useProxy) {
+    obj = new Proxy(Object.create(object), {
+      get(target, property) {
+        if (Object.keys(target).includes(property) || whitelist.includes(property)) {
+          return target[property];
+        }
+      }
+    });
+  } else {
+    obj = {};
+    whitelist.forEach((property) => {
+      if (!Object.keys(values).includes(property)) {
+        let getVal = undefined;
+        Object.defineProperty(obj, property, {
+          get() {
+            return getVal === undefined ? object[property] : getVal;
+          },
+          set(val) {
+            getVal = val;
+          }
+        });
+      }
+    });
+  }
+  return Object.assign(obj, values);
+}
+
