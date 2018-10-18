@@ -9,11 +9,10 @@
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "jshint": "^2.9.4",
-    "mocha": "^3.2.0"
-  },
+  "devDependencies": {},
   "dependencies": {
-    "json-decycle": "^1.0.0"
+    "jshint": "^2.9.6",
+    "json-decycle": "^1.0.0",
+    "mocha": "^5.2.0"
   }
 }
