@@ -178,3 +178,4 @@ function createObj(object, values, whitelist, useProxy) {
   }
   return Object.assign(obj, values);
 }
+
